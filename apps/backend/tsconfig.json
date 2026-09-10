@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@shared/auth": ["../../shared/auth/dist/index"],
+      "@shared/auth/*": ["../../shared/auth/dist/*"],
+      "@shared/db": ["../../shared/db/src/index"],
+      "@shared/db/*": ["../../shared/db/src/*"],
+      "@shared/routes": ["../../shared/routes/dist/index"],
+      "@shared/routes/*": ["../../shared/routes/dist/*"]
+    },
+    "incremental": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

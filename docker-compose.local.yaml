@@ -1,0 +1,162 @@
+services:
+  caddy-http:
+    profiles: ["http"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - |
+        cat >/etc/caddy/Caddyfile <<EOF
+        http://localhost:$${APP_PORT} {
+        	reverse_proxy frontend:$${APP_PORT}
+        }
+
+        http://localhost:$${API_PORT} {
+        	reverse_proxy backend:$${API_PORT}
+        }
+        EOF
+        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    environment:
+      APP_PORT: ${APP_PORT}
+      API_PORT: ${API_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+
+  caddy-https:
+    profiles: ["https"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - |
+        cat >/etc/caddy/Caddyfile <<EOF
+        localhost:$${APP_PORT} {
+        	tls internal
+        	reverse_proxy frontend:$${APP_PORT}
+        }
+
+        localhost:$${API_PORT} {
+        	tls internal
+        	reverse_proxy backend:$${API_PORT}
+        }
+        EOF
+        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    environment:
+      APP_PORT: ${APP_PORT}
+      API_PORT: ${API_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+      - "${API_PORT}:${API_PORT}"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+
+  postgres:
+    image: ${POSTGRES_IMAGE}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}"
+    volumes:
+      - ${PG_DATA_VOLUME}:${POSTGRES_DATA_PATH}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ${BACKEND_BUILD_CONTEXT}
+      dockerfile: ${BACKEND_DOCKERFILE}
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+        BACKEND_EXPOSE_PORT: ${API_PORT}
+    command: ${BACKEND_DEV_COMMAND}
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      NODE_ENV: development
+      ENV_FILE: ${ENV_FILE}
+      API_PORT: ${API_PORT}
+      APP_PORT: ${APP_PORT}
+      API_PUBLIC_URL: ${API_PUBLIC_URL}
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL}
+      DATABASE_URL: ${DOCKER_DATABASE_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      GOOGLE_AUTH_CLIENT_ID: ${GOOGLE_AUTH_CLIENT_ID}
+      GOOGLE_AUTH_CLIENT_SECRET: ${GOOGLE_AUTH_CLIENT_SECRET}
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - ./shared:/app/shared
+      - /app/node_modules
+      - /app/apps/backend/node_modules
+    depends_on:
+      db-push:
+        condition: service_completed_successfully
+
+  db-push:
+    build:
+      context: ${BACKEND_BUILD_CONTEXT}
+      dockerfile: ${BACKEND_DOCKERFILE}
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+        BACKEND_EXPOSE_PORT: ${API_PORT}
+    command: sh -lc "npx drizzle-kit push --config shared/db/drizzle.config.ts"
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      DATABASE_URL: ${DOCKER_DATABASE_URL}
+    volumes:
+      - ./shared:/app/shared
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ${FRONTEND_BUILD_CONTEXT}
+      dockerfile: ${FRONTEND_DOCKERFILE}
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+        FRONTEND_EXPOSE_PORT: ${APP_PORT}
+    command: ${FRONTEND_DEV_COMMAND}
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      NODE_ENV: development
+      ENV_FILE: ${ENV_FILE}
+      INTERNAL_API_URL: http://backend:${API_PORT}
+      API_PUBLIC_URL: ${API_PUBLIC_URL}
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL}
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+      - ./shared:/app/shared
+      - /app/node_modules
+      - /app/apps/frontend/.next
+    depends_on:
+      backend:
+        condition: service_started
+
+volumes:
+  pg-data:
+    name: ${PG_DATA_VOLUME}
+  caddy-data:
+  caddy-config:

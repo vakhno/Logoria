@@ -1,0 +1,34 @@
+services:
+  backend:
+    build:
+      context: ${BACKEND_BUILD_CONTEXT}
+      dockerfile: ${BACKEND_DOCKERFILE}
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+        BACKEND_EXPOSE_PORT: ${BACKEND_EXPOSE_PORT}
+    restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      ENV_FILE: ${ENV_FILE}
+      NODE_ENV: production
+    ports:
+      - "${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}"
+
+  frontend:
+    build:
+      context: ${FRONTEND_BUILD_CONTEXT}
+      dockerfile: ${FRONTEND_DOCKERFILE}
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+        FRONTEND_EXPOSE_PORT: ${FRONTEND_EXPOSE_PORT}
+    restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      ENV_FILE: ${ENV_FILE}
+      NODE_ENV: production
+    ports:
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}"
+    depends_on:
+      - backend

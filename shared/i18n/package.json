@@ -1,0 +1,25 @@
+{
+  "name": "@shared/i18n",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./constants": "./src/constants/index.ts",
+    "./messages": "./src/messages/index.ts",
+    "./navigation": "./src/lib/navigation/index.ts",
+    "./request": "./src/lib/request/index.ts",
+    "./routing": "./src/lib/routing/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "next-intl": "^4.14.2"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

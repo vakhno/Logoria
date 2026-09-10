@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "ES2022",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node16",
+    "resolveJsonModule": true
+  },
+  "files": [],
+  "exclude": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/.turbo/**"
+  ],
+  "references": [
+    {
+      "path": "./apps/backend"
+    },
+    {
+      "path": "./apps/frontend"
+    },
+    {
+      "path": "./shared/db"
+    },
+    {
+      "path": "./shared/auth"
+    },
+    {
+      "path": "./shared/components"
+    },
+    {
+      "path": "./shared/i18n"
+    },
+    {
+      "path": "./shared/routes"
+    }
+  ]
+}

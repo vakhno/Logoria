@@ -1,0 +1,14 @@
+{
+  "name": "@shared/unit",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "jest --config jest.unit.config.js --runInBand"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.5.1",
+    "ts-jest": "^29.4.12"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["jest", "node"],
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "../i18n/src/**/*.ts", "../routes/src/**/*.ts"]
+}

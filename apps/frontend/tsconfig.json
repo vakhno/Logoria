@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "es2022"],
+    "allowJs": false,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "paths": {
+      "@shared/components": ["../../shared/components/src/index.ts"],
+      "@shared/components/*": ["../../shared/components/src/*"],
+      "@shared/i18n": ["../../shared/i18n/src/index.ts"],
+      "@shared/i18n/*": ["../../shared/i18n/src/*"],
+      "@shared/routes": ["../../shared/routes/src/index.ts"]
+    },
+    "types": ["node"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

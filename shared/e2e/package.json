@@ -1,0 +1,23 @@
+{
+  "name": "@shared/e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "test": "npm run test:e2e",
+    "test:e2e": "playwright test",
+    "test-server": "tsx src/server/test-server.ts"
+  },
+  "dependencies": {
+    "@better-auth/memory-adapter": "^1.7.2",
+    "better-auth": "^1.7.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.1",
+    "tsx": "^4.23.13",
+    "typescript": "^6.0.3"
+  }
+}

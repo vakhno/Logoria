@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 16 32 32" role="img" aria-label="app_name logo">
+  <path
+    d="M22 42 30 34m0 0H19m11 0V45M42 22 34 30m0 0h11M34 30V19"
+    fill="none"
+    stroke="#201D1D"
+    stroke-width="5"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+  <circle cx="32" cy="32" r="5" fill="#201D1D"/>
+</svg>

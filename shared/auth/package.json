@@ -1,0 +1,45 @@
+{
+  "name": "@shared/auth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
+    "./server-config": {
+      "types": "./dist/server/server-config.d.ts",
+      "default": "./dist/server/server-config.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./constants": {
+      "types": "./dist/common/constants.d.ts",
+      "default": "./dist/common/constants.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@shared/routes": "file:../routes",
+    "better-auth": "^1.7.2"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
