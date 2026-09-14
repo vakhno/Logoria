@@ -48,10 +48,7 @@ export function ThemeProvider({
   initialTheme: Theme;
 }) {
   useServerInsertedHTML(() => (
-    <script
-      dangerouslySetInnerHTML={{ __html: themeBootstrapScript }}
-      suppressHydrationWarning
-    />
+    <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} suppressHydrationWarning />
   ));
 
   const [selectedTheme, setSelectedTheme] = useState<Theme>(initialTheme);

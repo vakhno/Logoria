@@ -7,11 +7,7 @@ type NextIntlProviderProps = {
   messages: ComponentProps<typeof NextIntlClientProvider>["messages"];
 };
 
-export function NextIntlProvider({
-  children,
-  locale,
-  messages,
-}: NextIntlProviderProps) {
+export function NextIntlProvider({ children, locale, messages }: NextIntlProviderProps) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       {children}

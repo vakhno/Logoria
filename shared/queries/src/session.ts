@@ -13,7 +13,10 @@ const getSessionQueryFn = async (): Promise<ClientSession | null> => {
   return data;
 };
 
-type SessionQueryOptions = Omit<Partial<UseQueryOptions<ClientSession | null, Error>>, "queryKey" | "queryFn">;
+type SessionQueryOptions = Omit<
+  Partial<UseQueryOptions<ClientSession | null, Error>>,
+  "queryKey" | "queryFn"
+>;
 
 export function useGetSession(options?: SessionQueryOptions) {
   return useQuery<ClientSession | null, Error>({

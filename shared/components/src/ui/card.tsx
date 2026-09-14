@@ -18,7 +18,10 @@ export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHead
   return <h2 className={cn("text-xl font-semibold", className)} {...props} />;
 }
 
-export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+export function CardDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p className={cn("mt-1 text-sm text-slate-600", className)} {...props} />;
 }
 
