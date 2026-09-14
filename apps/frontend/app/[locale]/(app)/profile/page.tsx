@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { MESSAGES, type Locale } from "@shared/i18n";
 import { ProfileScreen } from "../../../../src/screens/profile";
+import { getServerSession } from "../../../../src/lib/auth-server";
+import { redirect } from "next/navigation";
 
 export function generateMetadata({
   params,
@@ -14,6 +16,10 @@ export function generateMetadata({
   }));
 }
 
-export default function ProfilePage() {
-  return <ProfileScreen />;
+export default async function ProfilePage() {
+  const session = await getServerSession();
+
+  if (!session) redirect("/signin");
+
+  return <ProfileScreen session={session} />;
 }

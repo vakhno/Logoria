@@ -7,15 +7,15 @@ Complete these steps before project development starts.
 Install:
 
 - Git
-- Node.js
-- npm
+- Node.js 22 or newer
+- pnpm 11.19.0 (through Corepack)
 
 Verify:
 
 ```bash
 git --version
 node --version
-npm --version
+pnpm --version
 ```
 
 ## 1. Create Repository
@@ -36,6 +36,19 @@ If working on an existing repository, skip this step.
 git clone <repository-url>
 cd <repository-name>
 ```
+
+Enable pnpm and install all workspace dependencies:
+
+```bash
+corepack enable
+pnpm install --no-frozen-lockfile --force
+```
+
+This creates `pnpm-lock.yaml` and replaces the existing dependency installation.
+Commit the new lockfile before building Docker images, which use frozen installs.
+The previous `package-lock.json` can be removed after the migration is verified.
+Update existing `.env.local`, `.env.stage`, and `.env.production` container commands
+to match the pnpm commands in their example files.
 
 ## 3. Choose Development Branch
 

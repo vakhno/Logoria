@@ -2,13 +2,15 @@
 ARG NODE_IMAGE
 FROM ${NODE_IMAGE}
 WORKDIR /app
-COPY package*.json ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY apps/backend/package.json apps/backend/package.json
 COPY apps/frontend/package.json apps/frontend/package.json
+COPY apps/storybook/package.json apps/storybook/package.json
 COPY shared shared
-RUN npm ci
+RUN corepack enable && pnpm install --frozen-lockfile
 COPY . .
 ARG FRONTEND_EXPOSE_PORT
 ENV NODE_ENV=production
-RUN npm run build --workspace frontend
+RUN pnpm --filter frontend run build
 EXPOSE ${FRONTEND_EXPOSE_PORT}
 CMD ["sh", "-c", "exec $FRONTEND_CONTAINER_COMMAND"]

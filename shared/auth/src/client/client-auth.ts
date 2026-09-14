@@ -5,3 +5,7 @@ import type { AuthClient, ClientConfigProps } from "../types/index.js";
 export function createAuthClient(options: ClientConfigProps): AuthClient {
   return createBetterAuthClient(clientConfig(options));
 }
+
+export function getAuthClient(options: ClientConfigProps = {}): AuthClient {
+  return createAuthClient(options);
+}

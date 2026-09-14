@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run build --workspace @shared/components && storybook dev -p 6006 --no-open",
-    "build": "npm run build --workspace @shared/components && storybook build"
+    "dev": "pnpm --filter @shared/components run build && storybook dev -p 6006 --no-open",
+    "build": "pnpm --filter @shared/components run build && storybook build"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@storybook/react": "^10.6.0",
     "@storybook/react-webpack5": "^10.6.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "storybook": "^10.6.0"
   }
 }

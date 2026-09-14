@@ -1,34 +1,34 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Button, SiteHeader } from "@shared/components";
+import { Button, Header as HeaderPrimitive } from "@shared/components";
 import { APP_NAME } from "@shared/i18n";
 import { APP_ROUTES } from "@shared/routes";
 import { Link } from "@shared/i18n/navigation";
+import type { ClientSession } from "@shared/auth/types";
+import { useGetSession, useSignOut } from "@shared/queries";
+import { useRouter } from "next/navigation";
 import { LanguageSelect } from "./language-select";
 import { ThemeSelect } from "./theme-select";
 
-type HeaderSession = {
-  user?: {
-    name?: string | null;
-    email?: string | null;
-  } | null;
-} | null;
+type HeaderProps = { initialSession: ClientSession | null };
 
-type HeaderProps = {
-  onSignOut: () => void;
-  session: HeaderSession;
-  sessionPending: boolean;
-};
-
-export function Header({ onSignOut, session, sessionPending }: HeaderProps) {
+export function Header({ initialSession }: HeaderProps) {
+  const router = useRouter();
+  const signOutMutation = useSignOut();
+  const { data: session } = useGetSession({ initialData: initialSession });
   const user = session?.user;
   const auth = useTranslations("auth");
   const nav = useTranslations("nav");
 
+  async function signOut() {
+    await signOutMutation.mutateAsync();
+    router.refresh();
+  }
+
   return (
-    <SiteHeader className="sticky top-0 z-50 border-b border-slate-200 bg-white px-5 py-3 text-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-white sm:px-8 lg:px-10">
-      <SiteHeader.Brand>
+    <HeaderPrimitive className="sticky top-0 z-50 border-b border-slate-200 bg-white px-5 py-3 text-slate-950 dark:border-slate-800 dark:bg-slate-950 dark:text-white sm:px-8 lg:px-10">
+      <HeaderPrimitive.Brand>
         <Link className="flex items-center gap-3 text-sm font-semibold" href={APP_ROUTES.home}>
           <span
             aria-hidden="true"
@@ -38,8 +38,8 @@ export function Header({ onSignOut, session, sessionPending }: HeaderProps) {
           </span>
           <span>{APP_NAME}</span>
         </Link>
-      </SiteHeader.Brand>
-      <SiteHeader.Actions>
+      </HeaderPrimitive.Brand>
+      <HeaderPrimitive.Actions>
         <LanguageSelect />
         <ThemeSelect />
         {user ? (
@@ -57,13 +57,14 @@ export function Header({ onSignOut, session, sessionPending }: HeaderProps) {
           </>
         ) : (
           <span className="hidden text-sm text-slate-600 dark:text-slate-300 sm:inline">
-            {sessionPending ? auth("checkingSession") : auth("browsingAnonymously")}
+            {auth("browsingAnonymously")}
           </span>
         )}
         {user ? (
           <Button
             className="rounded-[4px] border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:hover:bg-slate-900"
-            onClick={onSignOut}
+            disabled={signOutMutation.isPending}
+            onClick={signOut}
             variant="outline"
           >
             {auth("signOut")}
@@ -76,7 +77,7 @@ export function Header({ onSignOut, session, sessionPending }: HeaderProps) {
             {auth("signIn")}
           </Link>
         )}
-      </SiteHeader.Actions>
-    </SiteHeader>
+      </HeaderPrimitive.Actions>
+    </HeaderPrimitive>
   );
 }

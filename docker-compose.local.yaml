@@ -107,6 +107,8 @@ services:
       - ./shared:/app/shared
       - /app/node_modules
       - /app/apps/backend/node_modules
+      - /app/shared/auth/node_modules
+      - /app/shared/queries/node_modules
     depends_on:
       db-push:
         condition: service_completed_successfully
@@ -118,7 +120,7 @@ services:
       args:
         NODE_IMAGE: ${NODE_IMAGE}
         BACKEND_EXPOSE_PORT: ${API_PORT}
-    command: sh -lc "npx drizzle-kit push --config shared/db/drizzle.config.ts"
+    command: sh -lc "pnpm exec drizzle-kit push --config shared/db/drizzle.config.ts"
     env_file:
       - ${ENV_FILE}
     environment:
@@ -150,10 +152,41 @@ services:
       - ./apps/frontend:/app/apps/frontend
       - ./shared:/app/shared
       - /app/node_modules
+      - /app/apps/frontend/node_modules
+      - /app/shared/auth/node_modules
+      - /app/shared/queries/node_modules
       - /app/apps/frontend/.next
     depends_on:
       backend:
         condition: service_started
+
+  storybook-dev:
+    build:
+      context: .
+      dockerfile: apps/storybook/Dockerfile
+      target: dev
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+    container_name: storybook-dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+        - action: rebuild
+          path: ./pnpm-workspace.yaml
+        - action: rebuild
+          path: ./apps/storybook/package.json
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./apps/storybook:/app/apps/storybook
+      - ./shared:/app/shared
+      - /app/node_modules
+      - /app/apps/storybook/node_modules
+      - /app/shared/auth/node_modules
+      - /app/shared/queries/node_modules
 
 volumes:
   pg-data:

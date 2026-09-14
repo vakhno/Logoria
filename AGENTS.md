@@ -14,7 +14,7 @@ Read only the context needed for the task.
   implementation constraints.
 - `DESIGN.md`: visual design, UX, copy, accessibility, or frontend polish.
 - This root `AGENTS.md` is the only agent instruction file. Do not add nested
-  `AGENTS.md` or `CLAUDE.md` files unless the user explicitly asks.
+  `AGENTS.md` files unless the user explicitly asks.
 
 ## Operating Rules
 

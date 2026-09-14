@@ -1,37 +1,24 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@shared/components";
-import { DEFAULT_LOCALE } from "@shared/i18n";
+import type { ClientSession } from "@shared/auth/types";
+import { useSignOut } from "@shared/queries";
 import { APP_ROUTES } from "@shared/routes";
-import { Link, useRouter } from "@shared/i18n/navigation";
-import { authClient } from "../../lib/auth-client";
+import { Link } from "@shared/i18n/navigation";
+import { useRouter } from "next/navigation";
 
-export function ProfileScreen() {
+export function ProfileScreen({ session }: { session: ClientSession }) {
   const router = useRouter();
-  const locale = useLocale();
+  const signOutMutation = useSignOut();
   const auth = useTranslations("auth");
   const nav = useTranslations("nav");
   const profile = useTranslations("profile");
-  const { data: session, isPending } = authClient.useSession();
+  const user = session.user;
 
-  useEffect(() => {
-    if (!isPending && !session?.user) {
-      const localePrefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
-      const profilePath = `${localePrefix}${APP_ROUTES.profile}`;
-      const signInPath = `${localePrefix}${APP_ROUTES.signin}`;
-
-      router.replace(`${signInPath}?redirectTo=${encodeURIComponent(profilePath)}`);
-    }
-  }, [isPending, locale, router, session?.user]);
-
-  if (isPending || !session?.user) {
-    return (
-      <main className="flex-1 bg-slate-50 p-8 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300">
-        {auth("checkingSession")}
-      </main>
-    );
+  async function signOut() {
+    await signOutMutation.mutateAsync();
+    router.refresh();
   }
 
   return (
@@ -40,7 +27,7 @@ export function ProfileScreen() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold">{profile("title")}</h1>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{session.user.email}</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{user.email}</p>
           </div>
           <Link
             className="rounded-[4px] border border-slate-200 bg-white px-3 py-2 text-sm font-medium hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
@@ -53,17 +40,18 @@ export function ProfileScreen() {
         <dl className="grid gap-3 text-sm">
           <div>
             <dt className="font-medium text-slate-700 dark:text-slate-300">{profile("name")}</dt>
-            <dd className="mt-1 text-slate-950 dark:text-white">{session.user.name}</dd>
+            <dd className="mt-1 text-slate-950 dark:text-white">{user.name}</dd>
           </div>
           <div>
             <dt className="font-medium text-slate-700 dark:text-slate-300">{profile("email")}</dt>
-            <dd className="mt-1 text-slate-950 dark:text-white">{session.user.email}</dd>
+            <dd className="mt-1 text-slate-950 dark:text-white">{user.email}</dd>
           </div>
         </dl>
 
         <Button
           className="w-fit rounded-[4px] border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-          onClick={() => authClient.signOut()}
+          disabled={signOutMutation.isPending}
+          onClick={signOut}
           variant="outline"
         >
           {auth("signOut")}

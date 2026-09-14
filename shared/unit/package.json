@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "npm run test:unit",
+    "test": "pnpm run test:unit",
     "test:unit": "jest --config jest.unit.config.js --runInBand"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@ Describe the repository at a high level.
 
 Default boilerplate:
 
-This repository is an npm/Turbo monorepo for a TypeScript web product scaffold.
+This repository is a pnpm/Turbo monorepo for a TypeScript web product scaffold.
 The product domain is intentionally not defined in this file. Use `PRODUCT.md`
 for product truth and `DESIGN.md` for visual and UX rules.
 
@@ -32,7 +32,31 @@ Default boilerplate:
 - Data: PostgreSQL through Drizzle ORM.
 - Auth: Better Auth client and server integration.
 - UI: shared React components, shared styles, Tailwind/shadcn-style tokens.
-- Tooling: npm workspaces, Turbo, TypeScript build mode, oxlint, oxfmt, Docker Compose.
+- Tooling: pnpm workspaces, Turbo, TypeScript build mode, oxlint, oxfmt, Docker Compose.
+
+pnpm is pinned to 11.19.0 in `package.json`. `pnpm-workspace.yaml` defines workspace
+packages, shared version overrides, and permitted dependency build scripts. Its
+hoisted layout preserves the current dependency resolution and Docker bind mounts.
+After switching from npm, run `corepack enable` and
+`pnpm install --no-frozen-lockfile --force` to generate the pnpm lockfile and replace
+the existing dependency installation. Docker builds require `pnpm-lock.yaml` and
+install all workspace manifests with `--frozen-lockfile`.
+
+pnpm's hoisted layout still creates workspace links in each consuming package's
+`node_modules`. Local Docker bind mounts hide image directories, so app dependency
+directories and `shared/auth/node_modules` / `shared/queries/node_modules` must use
+container-only volumes to preserve these links.
+
+Local Docker containers retain anonymous dependency and Next.js cache volumes
+across rebuilds. After changing the package manager or installed dependencies,
+rebuild the app images and recreate the frontend/backend with
+`docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local up -d --no-deps --force-recreate --renew-anon-volumes backend frontend storybook-dev`
+(use the active profile). Update local environment startup commands to match their
+pnpm example files. Keep PostgreSQL's named volume; do not use `down -v` for this
+dependency refresh.
+
+The Storybook development image includes root `tsconfig.json` because shared
+package builds extend it. Storybook source/configuration is bind-mounted locally.
 
 Expected content:
 
@@ -67,7 +91,7 @@ Default boilerplate:
 |-- PRODUCT.md          Product purpose, users, workflows, positioning, and open decisions.
 |-- CONTEXT.md          Implementation briefing, architecture, commands, and constraints.
 |-- DESIGN.md           Product UI design system.
-`-- package.json        Root npm workspace scripts.
+`-- package.json        Root pnpm workspace scripts.
 ```
 
 There should be one agent instruction file: root `AGENTS.md`. Do not add nested
@@ -130,6 +154,9 @@ Default boilerplate:
   Avoid one-off colors, spacing, radii, or motion values in components.
 - Do not edit generated files such as `.next/`, `dist/`, `node_modules/`,
   `next-env.d.ts`, or `*.tsbuildinfo`.
+- Theme selection mirrors next-themes' localStorage preference into the
+  `theme-preference` cookie. The locale layout reads this cookie to render the
+  selected theme button before hydration; allowed values are light, dark, and system.
 
 Expected content:
 
@@ -160,6 +187,13 @@ Database writes are security-sensitive:
 
 - Drizzle schema tables are `user`, `session`, `account`, and `verification`.
 - `session.userId` and `account.userId` cascade on user deletion.
+- Better Auth 1.7.3+ identifies accounts by `providerId` and `accountId` and no longer
+  writes `issuer`. Retain the historical `account.issuer` column as nullable and
+  remove the old `account_issuer_account_idx` unique index. Existing deployments
+  need `ALTER TABLE account ALTER COLUMN issuer DROP NOT NULL` and
+  `DROP INDEX IF EXISTS account_issuer_account_idx` before accepting auth traffic;
+  this preserves existing account rows and issuer values. Check for duplicate
+  `(provider_id, account_id)` pairs before upgrading.
 - Do not create migrations, push schema, or change persisted fields unless the
   task explicitly requires it.
 
@@ -209,34 +243,37 @@ List the standard commands contributors and agents should run from the repositor
 
 Default boilerplate:
 
-| Task               | Command                                |
-| ------------------ | -------------------------------------- |
-| Install            | `npm install`                          |
-| Frontend dev       | `npm run dev --workspace frontend`     |
-| Backend dev        | `npm run dev:3002 --workspace backend` |
-| Storybook          | `npm run storybook`                    |
-| Build              | `npm run build`                        |
-| Lint               | `npm run lint`                         |
-| Typecheck          | `npm run typecheck`                    |
-| Format             | `npm run format`                       |
-| Format check       | `npm run format:check`                 |
-| Unit tests         | `npm run test:unit`                    |
-| Integration tests  | `npm run test:integration`             |
-| E2E tests          | `npm run test:e2e`                     |
-| Local Docker start | `npm run docker:start:local`           |
-| Local Docker stop  | `npm run docker:down:local`            |
-| Drizzle generate   | `npm run drizzle:generate`             |
-| Drizzle migrate    | `npm run drizzle:migrate`              |
-| Drizzle push local | `npm run db:push:local`                |
+| Task               | Command                              |
+| ------------------ | ------------------------------------ |
+| Install            | `pnpm install`                       |
+| Frontend dev       | `pnpm --filter frontend run dev`     |
+| Backend dev        | `pnpm --filter backend run dev:3002` |
+| Storybook          | `pnpm run storybook`                 |
+| Build              | `pnpm run build`                     |
+| Lint               | `pnpm run lint`                      |
+| Typecheck          | `pnpm run typecheck`                 |
+| Format             | `pnpm run format`                    |
+| Format check       | `pnpm run format:check`              |
+| Unit tests         | `pnpm run test:unit`                 |
+| Integration tests  | `pnpm run test:integration`          |
+| E2E tests          | `pnpm run test:e2e`                  |
+| Local Docker start | `pnpm run docker:start:local`        |
+| Local Docker stop  | `pnpm run docker:down:local`         |
+| Drizzle generate   | `pnpm run drizzle:generate`          |
+| Drizzle migrate    | `pnpm run drizzle:migrate`           |
+| Drizzle push local | `pnpm run db:push:local`             |
 
 ## Validation
+
+Root lint scripts run oxlint with its default rules on `apps/` and `shared/`.
+Installed agent tooling under `.agents/` is outside the application lint scope.
 
 Describe the smallest checks that prove different kinds of changes.
 
 Default boilerplate:
 
 - Docs-only changes: review the changed markdown; no runtime check needed.
-- Normal code changes: run `npm run lint` and `npm run typecheck`.
+- Normal code changes: run `pnpm run lint` and `pnpm run typecheck`.
 - Shared package changes: add or run the focused unit/integration test workspace
   that covers the changed package.
 - Frontend UI changes: verify the route/component in browser or Storybook, and

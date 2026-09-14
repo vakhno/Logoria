@@ -1,54 +1,23 @@
 "use client";
 
-import { useTheme as useNextTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { createContext, useContext } from "react";
+import type { Theme } from "@shared/theme";
 
-export type Theme = "light" | "dark" | "system";
+export type { Theme } from "@shared/theme";
 
-function isTheme(value: string | undefined): value is Theme {
-  return value === "light" || value === "dark" || value === "system";
-}
+export type ThemeContextValue = {
+  selectedTheme: Theme;
+  selectTheme: (theme: Theme) => void;
+};
 
-function setThemePreferenceAttribute(theme: Theme) {
-  if (typeof window === "undefined") {
-    return;
+export const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+export function useTheme(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    throw new Error("useTheme must be used inside ThemeProvider");
   }
 
-  window.document.documentElement.dataset.themePreference = theme;
-}
-
-function getThemePreferenceAttribute(): Theme {
-  if (typeof window === "undefined") {
-    return "system";
-  }
-
-  const themePreference = window.document.documentElement.dataset.themePreference;
-
-  if (isTheme(themePreference)) {
-    return themePreference;
-  }
-
-  const storedTheme = window.localStorage.getItem("theme") ?? undefined;
-
-  return isTheme(storedTheme) ? storedTheme : "system";
-}
-
-export function useTheme() {
-  const { setTheme, theme } = useNextTheme();
-  const [selectedTheme, setSelectedTheme] = useState<Theme | undefined>();
-
-  useEffect(() => {
-    const nextTheme = isTheme(theme) ? theme : getThemePreferenceAttribute();
-
-    setSelectedTheme(nextTheme);
-    setThemePreferenceAttribute(nextTheme);
-  }, [theme]);
-
-  function selectTheme(theme: Theme) {
-    setSelectedTheme(theme);
-    setThemePreferenceAttribute(theme);
-    setTheme(theme);
-  }
-
-  return { selectTheme, selectedTheme };
+  return context;
 }

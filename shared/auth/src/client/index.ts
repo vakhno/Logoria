@@ -1,5 +1,5 @@
 export * from "better-auth/client";
-export { createAuthClient } from "./client-auth.js";
+export { createAuthClient, getAuthClient } from "./client-auth.js";
 export { clientConfig } from "./client-config.js";
 export type {
   AuthClient,

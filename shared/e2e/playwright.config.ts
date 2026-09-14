@@ -13,7 +13,7 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "npm run test-server",
+    command: "pnpm run test-server",
     url: `${TEST_AUTH_URL}/test/ok`,
     reuseExistingServer: !process.env.CI,
     timeout: process.env.CI ? 120_000 : 30_000,

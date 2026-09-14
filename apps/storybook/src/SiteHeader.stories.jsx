@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, SiteHeader } from "../../../shared/components/dist/index.js";
+import { Button, Header } from "../../../shared/components/dist/index.js";
 
 const meta = {
-  title: "Design System/Patterns/SiteHeader",
-  component: SiteHeader,
+  title: "Design System/Patterns/Header",
+  component: Header,
   parameters: {
     layout: "fullscreen",
   },
@@ -17,15 +17,15 @@ export const SignedOut = {
       "div",
       { style: { padding: 24 } },
       React.createElement(
-        SiteHeader,
+        Header,
         null,
         React.createElement(
-          SiteHeader.Brand,
+          Header.Brand,
           null,
           React.createElement("a", { href: "/" }, "app_name"),
         ),
         React.createElement(
-          SiteHeader.Actions,
+          Header.Actions,
           null,
           React.createElement("span", null, "Browsing anonymously"),
           React.createElement("a", { href: "/signin" }, "Sign in"),
@@ -40,21 +40,21 @@ export const SignedIn = {
       "div",
       { style: { padding: 24 } },
       React.createElement(
-        SiteHeader,
+        Header,
         null,
         React.createElement(
-          SiteHeader.Brand,
+          Header.Brand,
           null,
           React.createElement("a", { href: "/" }, "app_name"),
           React.createElement(
-            SiteHeader.Nav,
+            Header.Nav,
             null,
             React.createElement("a", { href: "/rooms" }, "Rooms"),
             React.createElement("a", { href: "/settings" }, "Settings"),
           ),
         ),
         React.createElement(
-          SiteHeader.Actions,
+          Header.Actions,
           null,
           React.createElement(
             "div",

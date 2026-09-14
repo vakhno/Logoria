@@ -1,18 +1,12 @@
-"use client";
-
 import { Header } from "../../../src/components/header";
-import { authClient } from "../../../src/lib/auth-client";
+import { getServerSession } from "../../../src/lib/auth-server";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { data: session, isPending: sessionPending } = authClient.useSession();
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession();
 
   return (
     <div className="flex min-h-svh flex-col">
-      <Header
-        onSignOut={() => authClient.signOut()}
-        session={session}
-        sessionPending={sessionPending}
-      />
+      <Header initialSession={session} />
       <div className="flex flex-1 flex-col">{children}</div>
     </div>
   );

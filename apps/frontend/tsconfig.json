@@ -14,7 +14,11 @@
       "@shared/components/*": ["../../shared/components/src/*"],
       "@shared/i18n": ["../../shared/i18n/src/index.ts"],
       "@shared/i18n/*": ["../../shared/i18n/src/*"],
-      "@shared/routes": ["../../shared/routes/src/index.ts"]
+      "@shared/routes": ["../../shared/routes/src/index.ts"],
+      "@shared/queries": ["../../shared/queries/src/index.ts"],
+      "@shared/queries/*": ["../../shared/queries/src/*"],
+      "@shared/theme": ["../../shared/theme/src/index.ts"],
+      "@shared/theme/*": ["../../shared/theme/src/*"]
     },
     "types": ["node"],
     "plugins": [

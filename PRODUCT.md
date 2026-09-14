@@ -2,146 +2,173 @@
 
 <!-- impeccable:product-schema 1 -->
 
-Use this file for durable product truth: who the product serves, what it makes possible, how it is positioned, and what future work must preserve. Do not use it for implementation details, visual design rules, or agent behavior.
+This is a reusable documentation template. Each section explains what to record and provides a completed example for a fictional team planning application. All users, workflows, research, metrics, and commitments below are illustrative; they are not facts or requirements for the current project.
+
+When adapting this template, replace examples with confirmed product facts and remove sections that do not apply. Label assumptions and planned capabilities explicitly; record unknowns under Open decisions rather than filling them with invented facts.
+
+Keep durable product context here: who the product serves, what it makes possible, and which rules future work must preserve. Visual and interaction decisions belong in `DESIGN.md`; architecture and commands belong in `CONTEXT.md`. Feature specifications and implementation task lists belong in the project issue tracker or their dedicated documents.
 
 ## Platform
 
-Describe the primary product platform.
+**Section description:** Identify the supported platforms, delivery channels, and platform scope.
 
-Default value:
+**Project-agnostic example:**
 
-- `web`
-
-Expected content:
-
-- `web`, `ios`, `android`, or `adaptive`.
-- Any confirmed platform-specific constraint that changes product behavior.
+The product is a responsive web application used on desktop and mobile browsers. A public website explains the service, and signed-in users access private team workspaces. Desktop supports detailed planning and review; mobile supports checking status and making quick updates. Native mobile applications and offline editing are outside the first release.
 
 ## Users
 
-Describe who the product is for and what situation they are in.
+**Section description:** Describe the primary audience, their goals, current difficulties, and meaningful differences between user groups.
 
-Expected content:
+**Project-agnostic example:**
 
-- Primary user segment.
-- Secondary user segments, if confirmed.
-- User roles and permission differences.
-- User goals, urgency, constraints, and success criteria.
+The primary audience is small teams of 3–20 people coordinating shared projects. Team leads need a reliable overview of priorities and blockers. Contributors need to know what they own and update progress quickly. Occasional collaborators need limited access to a specific project without seeing unrelated team information.
 
-## Product Purpose
+Today these users combine spreadsheets, chat messages, and meetings. Their main difficulty is finding the latest status and identifying who should act next.
 
-Describe what the product makes possible and why it exists.
+## Product purpose
 
-Expected content:
+**Section description:** Explain the problem the product solves and the outcome it should create for users.
 
-- Core user job.
-- Main workflow the product enables.
-- Definition of a successful product experience.
-- What the product should make easier, faster, safer, clearer, or more valuable.
+**Project-agnostic example:**
+
+The product gives teams a shared view of planned work, ownership, and progress. It reduces time spent collecting status updates and helps teams notice blocked work before deadlines are missed. The desired outcome is a team that can coordinate its next steps without rebuilding context in every conversation.
 
 ## Positioning
 
-Describe the product category, market stance, and real differentiator.
+**Section description:** State the product category, relevant alternatives, and the specific reason users would choose it.
 
-Expected content:
+**Project-agnostic example:**
 
-- Product category.
-- Competing alternatives.
-- Core mechanism or advantage.
-- Claims that must be supported by evidence.
+The product is a lightweight coordination tool for teams that have outgrown personal task lists but do not need an enterprise planning suite. Its alternatives are shared spreadsheets, chat-based coordination, and more complex project management tools. It stands out through quick setup, clear ownership, and a useful overview that requires little ongoing administration.
 
-## Operating Context
+## Operating context
 
-Describe the factual environment in which the product is used or evaluated.
+**Section description:** Describe when and where the product is used, including frequency, devices, interruptions, and collaboration patterns.
 
-Expected content:
+**Project-agnostic example:**
 
-- Primary end-to-end workflow.
-- Public, private, anonymous, authenticated, realtime, asynchronous, or content-driven usage patterns.
-- External tools, systems, documents, people, or rituals involved in the workflow.
-- Moderation, review, approval, governance, or compliance needs.
+Users review project status during weekly planning meetings and update individual work throughout the day. A contributor may use a phone between meetings, while a lead reviews several projects on a desktop. Sessions are often short and interrupted, so filters, unsaved edits, and the user's place in a project should remain understandable when they return.
 
-## Capabilities and Constraints
+## Core workflows
 
-Describe confirmed functionality, non-functional constraints, and unresolved scope.
+**Section description:** Describe the main journeys from their trigger to their successful outcome, including relevant failure or recovery paths. Distinguish existing behavior from planned behavior.
 
-Default scaffold capabilities:
+**Project-agnostic example:**
 
-- Web app shell.
-- Home, sign-in, and profile routes.
-- User accounts through the scaffold auth layer.
-- OAuth sign-in support.
-- English and Spanish localization.
-- Light, dark, and system theme preference.
-- Shared UI primitives and global design tokens.
+1. **Start a team workspace:** A lead signs in, names a workspace, creates its first project, and invites teammates. The journey succeeds when the team can access a shared project. Invalid invitations show an actionable error.
+2. **Coordinate work:** A member creates a work item, assigns an owner, and sets a status and optional due date. The assigned person updates progress and records blockers. The journey succeeds when the next action and its owner are visible.
+3. **Review progress:** A lead filters open work by owner or status, reviews blockers, and follows up through a comment. The journey succeeds when the team agrees on the next steps.
+4. **Recover archived work:** A member searches archived projects and restores one they are allowed to edit. The journey succeeds when its history and work items are available again.
 
-Expected content:
+## Capabilities and scope
 
-- MVP capabilities.
-- Later capabilities.
-- Explicit non-goals.
-- Persisted data or domain objects.
-- Authorization, privacy, retention, realtime, media, payment, search, notification, or content-management constraints.
-- Open product decisions that future work must not silently decide.
+**Section description:** Define included capabilities, the initial release boundary, and explicit exclusions.
 
-## Brand Commitments
+**Project-agnostic example:**
 
-Describe durable brand, voice, identity, naming, and claim constraints.
+The first release includes workspaces, invitations, projects, work items, ownership, status changes, comments, activity history, search, filtering, and archiving.
 
-Expected content:
+Billing, external integrations, custom automation, time tracking, and offline editing are excluded. A team should be able to complete its planning and status review workflow without those features.
 
-- Product name.
-- Tone of voice.
-- Logo, naming, or identity constraints.
-- Required or forbidden claims.
-- Pricing, legal, safety, educational, or credibility claims that are already confirmed.
+## Constraints and business rules
 
-## Evidence on Hand
+**Section description:** Record durable rules that limit behavior or determine valid product outcomes.
 
-Describe the real source material available for future product and design work.
+**Project-agnostic example:**
 
-Default scaffold evidence:
+Every project belongs to one workspace. A work item belongs to one project and may have one responsible owner. Members can edit content only in workspaces they belong to. Archiving preserves project history and allows restoration. A workspace must retain at least one owner; its last owner cannot leave without transferring ownership.
 
-- `CONTEXT.md`: implementation context, architecture, commands, and constraints.
-- `DESIGN.md`: neutral UI design-system starting point.
-- `AGENTS.md`: agent behavior and repository workflow rules.
-- Current scaffold screens: home, sign-in, and profile.
-- Current scaffold shared packages: auth, components, database, i18n, routes, styles, tests.
+## Terminology
 
-Expected content:
+**Section description:** Define terms where ambiguity would change product behavior or naming. Keep one canonical glossary and reference it from other documents.
 
-- Product briefs.
-- Research notes.
-- User interviews.
-- Analytics.
-- Existing screens, demos, or prototypes.
-- Testimonials, case studies, benchmarks, press, or partner proof.
-- Explicitly missing evidence that must not be fabricated.
+**Project-agnostic example:**
 
-## Product Principles
+| Term      | Meaning                                                                       |
+| --------- | ----------------------------------------------------------------------------- |
+| Workspace | A team area containing members, projects, and settings.                       |
+| Project   | A collection of work items organized around a shared goal.                    |
+| Work item | A piece of work with a status, optional owner, and optional due date.         |
+| Blocked   | A status indicating that work cannot continue until a dependency is resolved. |
+| Archive   | Remove a project from active views while preserving its content and history.  |
 
-Describe three to five durable product decision rules.
+Use “work item” consistently rather than alternating between “task,” “ticket,” and “issue.” Other documents reference these definitions instead of maintaining separate versions.
 
-Expected content:
+## Access and roles
 
-- Principles derived from confirmed product truth.
-- Rules that help decide scope, tradeoffs, and user experience behavior.
-- No visual recipes, implementation instructions, or generic values.
+**Section description:** Explain what each user type can see or do and any important restrictions.
 
-## Accessibility & Inclusion
+**Project-agnostic example:**
 
-Describe product-specific accessibility and inclusion requirements.
+| Role    | Allowed actions                                                  | Restrictions                                    |
+| ------- | ---------------------------------------------------------------- | ----------------------------------------------- |
+| Owner   | Manage workspace settings, membership, projects, and work items. | Cannot remove the last remaining owner.         |
+| Member  | Create projects and edit workspace work items.                   | Cannot change ownership or membership settings. |
+| Guest   | View explicitly shared projects and add comments.                | Cannot browse other projects or manage members. |
+| Visitor | View the public website and start sign-in.                       | Cannot access private workspace content.        |
 
-Default scaffold baseline:
+Guests receive access only after accepting an invitation to a specific project. Sharing a project does not expose other workspace content.
 
-- Preserve keyboard access and visible focus for interactive UI.
-- Do not rely on color alone to communicate state.
-- Keep core flows usable at narrow viewports.
-- Support the existing localization architecture when adding user-facing copy.
+## Brand commitments
 
-Expected content:
+**Section description:** Describe the promises users should be able to rely on across the experience.
 
-- Accessibility standard or compliance target, if confirmed.
-- Known user needs.
-- Language, localization, device, input, assistive technology, or low-bandwidth constraints.
-- Participation alternatives for users who cannot use a primary interaction mode.
+**Project-agnostic example:**
+
+The product promises clear ownership, understandable history, and useful defaults. Users should know whether a change was saved and who can see it. The product should explain limitations plainly, preserve work during recoverable failures, and avoid forcing unnecessary configuration before users can begin.
+
+## Evidence on hand
+
+**Section description:** List available research or proof, its source, and its limitations. Distinguish observations from assumptions.
+
+**Project-agnostic example:**
+
+In this fictional example, six interviews with small teams found that unclear ownership and scattered status updates were common complaints. Four prototype participants completed project setup without guidance; two struggled to distinguish workspace settings from project settings.
+
+The team has interview notes and prototype recordings but no production retention data. The assumption that clearer ownership reduces coordination meetings remains unvalidated.
+
+## Product principles
+
+**Section description:** State rules that help prioritize work and resolve tradeoffs.
+
+**Project-agnostic example:**
+
+- Make the next action and its owner visible.
+- Optimize common updates for short, interrupted sessions.
+- Prefer useful defaults over mandatory setup.
+- Preserve history and provide recovery for reversible actions.
+- Send notifications when the user can take meaningful action.
+
+## Success signals
+
+**Section description:** Define measurable outcomes, how they will be observed, and whether values are targets or validated results.
+
+**Project-agnostic example:**
+
+The initial targets are:
+
+- At least 80% of new team leads create a project and invite a teammate within their first session.
+- The median time to the first project is below five minutes.
+- At least 70% of active teams return in the fourth week after signup.
+- In usability testing, at least 90% of participants identify a blocked item's owner within 30 seconds.
+
+These are proposed targets, not measured results. Activation and retention use product analytics; task completion is evaluated through usability sessions.
+
+## Accessibility and inclusion
+
+**Section description:** Document accessibility goals and audience needs that affect product decisions.
+
+**Project-agnostic example:**
+
+The product targets WCAG 2.2 AA. Teams may include users with limited vision, motor impairments, or slow connections, so core workflows must remain usable for those audiences. Users may work in different languages and time zones. `DESIGN.md` records the interface patterns that support these needs; implementation and verification details live with the relevant code and tests.
+
+## Open decisions
+
+**Section description:** List unresolved questions, their practical impact, and what is needed before making a decision.
+
+**Project-agnostic example:**
+
+- **Guest activity access:** Should guests see project activity history? Decide whether the history can reveal previously private information.
+- **Notification defaults:** Which updates require email? Validate frequency with pilot teams before enabling broad notifications.
+- **Deletion policy:** Is archiving sufficient for the first release? Confirm retention and recovery expectations before adding permanent deletion.

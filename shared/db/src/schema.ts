@@ -1,4 +1,4 @@
-import { boolean, pgEnum, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 
@@ -30,30 +30,25 @@ export const sessionTable = pgTable("session", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const accountTable = pgTable(
-  "account",
-  {
-    id: text("id").primaryKey(),
-    issuer: text("issuer").notNull(),
-    accountId: text("account_id").notNull(),
-    providerId: text("provider_id").notNull(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
-    accessToken: text("access_token"),
-    refreshToken: text("refresh_token"),
-    idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at", { withTimezone: true }),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { withTimezone: true }),
-    scope: text("scope"),
-    password: text("password"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-  },
-  (table) => ({
-    issuerAccountIdx: uniqueIndex("account_issuer_account_idx").on(table.issuer, table.accountId),
-  }),
-);
+export const accountTable = pgTable("account", {
+  id: text("id").primaryKey(),
+  // Retain historical values from Better Auth 1.7.0–1.7.2; newer versions omit issuer.
+  issuer: text("issuer"),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at", { withTimezone: true }),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { withTimezone: true }),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const verificationTable = pgTable("verification", {
   id: text("id").primaryKey(),

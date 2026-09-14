@@ -5,7 +5,13 @@ const withNextIntl = createNextIntlPlugin("../../shared/i18n/src/lib/request/ind
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@shared/auth", "@shared/components", "@shared/i18n", "@shared/routes"],
+  transpilePackages: [
+    "@shared/auth",
+    "@shared/components",
+    "@shared/i18n",
+    "@shared/queries",
+    "@shared/routes",
+  ],
   env: {
     API_PUBLIC_URL: process.env.API_PUBLIC_URL,
     APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
@@ -25,6 +31,7 @@ const nextConfig = {
       ...config.resolve.alias,
       "@shared/components$": path.resolve(__dirname, "../../shared/components/src/index.ts"),
       "@shared/i18n$": path.resolve(__dirname, "../../shared/i18n/src/index.ts"),
+      "@shared/queries$": path.resolve(__dirname, "../../shared/queries/src/index.ts"),
       "@shared/routes$": path.resolve(__dirname, "../../shared/routes/src/index.ts"),
     };
     return config;

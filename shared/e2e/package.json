@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",
-    "test": "npm run test:e2e",
+    "test": "pnpm run test:e2e",
     "test:e2e": "playwright test",
     "test-server": "tsx src/server/test-server.ts"
   },

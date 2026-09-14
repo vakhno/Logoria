@@ -1,6 +1,6 @@
 import { MESSAGES, resolveLocale } from "@shared/i18n";
-import { routing } from "@shared/i18n/routing";
 import localFont from "next/font/local";
+import { getThemePreference } from "../../src/lib/theme-server";
 import { NextIntlProvider, QueryProvider, ThemeProvider } from "../../src/providers";
 import "../globals.css";
 
@@ -102,10 +102,6 @@ const montserrat = localFont({
   fallback: ["Arial", "sans-serif"],
 });
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
-
 export default async function LocaleLayout({
   children,
   params,
@@ -114,15 +110,21 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const locale = resolveLocale((await params).locale);
+  const theme = await getThemePreference();
 
   return (
-    <html lang={locale} suppressHydrationWarning className={montserrat.variable}>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${montserrat.variable}`}
+      data-theme-preference={theme}
+    >
       <body>
-        <NextIntlProvider locale={locale} messages={MESSAGES[locale]}>
-          <ThemeProvider>
+        <ThemeProvider initialTheme={theme}>
+          <NextIntlProvider locale={locale} messages={MESSAGES[locale]}>
             <QueryProvider>{children}</QueryProvider>
-          </ThemeProvider>
-        </NextIntlProvider>
+          </NextIntlProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

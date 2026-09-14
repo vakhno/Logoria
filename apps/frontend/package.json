@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -p 3001",
-    "build": "npm run build --workspace @shared/routes && npm run build --workspace @shared/i18n && npm run build --workspace @shared/components && npm run build --workspace @shared/auth && next build",
+    "build": "pnpm --filter @shared/routes run build && pnpm --filter @shared/i18n run build && pnpm --filter @shared/components run build && pnpm --filter @shared/auth run build && pnpm --filter @shared/queries run build && next build",
     "start": "next start -p 3001"
   },
   "dependencies": {
-    "@shared/auth": "file:../../shared/auth",
-    "@shared/components": "file:../../shared/components",
-    "@shared/i18n": "file:../../shared/i18n",
-    "@shared/routes": "file:../../shared/routes",
-    "@shared/styles": "file:../../shared/styles",
+    "@shared/auth": "workspace:*",
+    "@shared/components": "workspace:*",
+    "@shared/i18n": "workspace:*",
+    "@shared/queries": "workspace:*",
+    "@shared/routes": "workspace:*",
+    "@shared/styles": "workspace:*",
     "@tanstack/react-query": "^5.102.8",
     "better-auth": "^1.7.2",
     "next": "16.3.4",
     "next-intl": "^4.14.2",
-    "next-themes": "^0.4.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
