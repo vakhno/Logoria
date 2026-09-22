@@ -55,6 +55,9 @@ importers:
       '@shared/routes':
         specifier: workspace:*
         version: link:../../shared/routes
+      '@shared/schemas':
+        specifier: workspace:*
+        version: link:../../shared/schemas
       better-auth:
         specifier: ^1.7.2
         version: 1.7.4(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.23.1)(kysely@0.29.5)(pg@8.23.0))(next@16.3.4(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.63.0)(@types/node@26.5.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@5.0.0(@types/node@26.5.1)(vite@8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.13)))
@@ -255,6 +258,12 @@ importers:
       '@shared/auth':
         specifier: workspace:*
         version: link:../auth
+      '@shared/routes':
+        specifier: workspace:*
+        version: link:../routes
+      '@shared/schemas':
+        specifier: workspace:*
+        version: link:../schemas
       '@tanstack/react-query':
         specifier: ^5.102.8
         version: 5.102.8(react@19.2.8)
@@ -270,6 +279,16 @@ importers:
         version: 6.0.3
 
   shared/routes:
+    devDependencies:
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
+  shared/schemas:
+    dependencies:
+      zod:
+        specifier: ^4.6.2
+        version: 4.6.2
     devDependencies:
       typescript:
         specifier: ^6.0.3

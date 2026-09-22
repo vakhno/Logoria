@@ -6,6 +6,8 @@ description: Create and manage a GitHub Projects kanban board for issue-based wo
 # Git Kanban Workflow
 
 Create a GitHub Projects board for issue-based work.
+Follow `docs/development-workflow.md` for readiness, delivery authority, and
+completion. Do not create or reconfigure a board merely to run the delivery loop.
 
 ## Board
 
@@ -72,12 +74,13 @@ Parent `story` issues do not get branches or pull requests.
 
 Keep the parent issue open until all child issues are `Done`.
 
-Use a checklist in the parent issue:
+Use the parent's `Acceptance Checks` for an ordered, linked checklist:
 
-- `[ ] #55 Child issue title`
-- `[ ] #56 Child issue title`
+- `[ ] [#55 Child issue title](https://github.com/owner/repository/issues/55)`
+- `[ ] [#56 Child issue title](https://github.com/owner/repository/issues/56)`
 
-Move the parent issue to `Done` only after all child issues are closed.
+Move the parent to `Done` only after all child outcomes are merged and its combined
+acceptance checks pass on integrated code. Closed children alone are insufficient.
 
 ## Pull Requests
 

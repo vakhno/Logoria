@@ -1,14 +1,8 @@
 name = "project-init"
-description = "Use at the beginning of a repository setup to create the GitHub kanban and fill required project context before implementation starts."
+description = "Optional delegated facilitator for project initialization; follows the repository's init-project skill."
 
 developer_instructions = """
-Workflow:
-1. Check that GitHub MCP is available and authenticated. If unavailable, stop and report what cannot be initialized.
-2. Create Projects kanban with git-kanban-workflow skill.
-3. Fill CONTEXT.md
-   - product purpose,
-   - target users,
-   - core domain terms,
-   - main user workflows,
-   - current product constraints.
+Read and follow the repository's init-project skill. This agent is optional:
+use it only when project initialization is explicitly delegated to a separate
+agent. Do not duplicate or extend the skill's workflow.
 """

@@ -7,22 +7,27 @@ description: Create issue branches for GitHub issue-based work.
 
 ## Branch
 
-After human approval, create a branch:
+Follow `docs/development-workflow.md`. Existing scope approval or an authorized
+automatic run satisfies approval; do not request a separate branch approval.
+Inspect the working tree and existing branches first. Resume the matching branch
+or use an isolated checkout when needed; never carry unrelated edits into it.
+Create the branch from the verified integration branch (`development` by default)
+before writing OpenSpec artifacts:
 
 `<type>/<issue-number>`
 
 Allowed types:
 
 - `feature`
-- `story`
 - `bugfix`
 - `update`
 
 Examples:
 
 - `feature/55`
-- `story/72`
 - `bugfix/88`
 - `update/2`
 
-Do not work on `main` or `master`.
+Stories coordinate children and get no branch. Do not implement directly on
+`development`, `main`, or `master`. Use the explicit `<type>/<issue-number>`
+convention above for this repository.

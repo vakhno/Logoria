@@ -8,6 +8,9 @@ description: Create pull requests for GitHub issue-based work.
 ## Pull Request
 
 Create a PR from the current issue or sub-issue branch.
+Follow `docs/development-workflow.md` for delivery authority and completion.
+Target the verified integration branch (`development` by default). Reuse an
+existing PR for the branch. Stories get no PR; their children deliver the work.
 
 Use this PR title:
 
@@ -25,5 +28,11 @@ Include in the PR body:
 - Summary of the change.
 - Important issue details reviewers need.
 - Verification run.
+- OpenSpec change/archive reference or inline issue plan.
+- Acceptance evidence, relevant review findings, and unrun checks.
 
 Only use a closing keyword when the PR fully completes the issue.
+Do not use a closing keyword for the parent story. Verify issue closure after
+merge, especially when the target is not the repository default branch.
+Merge only with explicit authority and current required CI/review evidence;
+otherwise leave In Review. Never treat PR creation as issue completion.

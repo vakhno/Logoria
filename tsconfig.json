@@ -41,6 +41,9 @@
       "path": "./shared/routes"
     },
     {
+      "path": "./shared/schemas"
+    },
+    {
       "path": "./shared/queries"
     },
     {

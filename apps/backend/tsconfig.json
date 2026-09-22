@@ -16,7 +16,9 @@
       "@shared/db": ["../../shared/db/src/index"],
       "@shared/db/*": ["../../shared/db/src/*"],
       "@shared/routes": ["../../shared/routes/dist/index"],
-      "@shared/routes/*": ["../../shared/routes/dist/*"]
+      "@shared/routes/*": ["../../shared/routes/dist/*"],
+      "@shared/schemas": ["../../shared/schemas/dist/index"],
+      "@shared/schemas/*": ["../../shared/schemas/dist/*"]
     },
     "incremental": true
   },

@@ -24,6 +24,10 @@ const nextConfig = {
         source: "/api/auth/:path*",
         destination: `${apiUrl}/api/auth/:path*`,
       },
+      {
+        source: "/api/:path*",
+        destination: `${apiUrl}/api/:path*`,
+      },
     ];
   },
   webpack: (config) => {

@@ -1,0 +1,31 @@
+schema: spec-driven
+
+context: |
+  This is a pnpm/Turbo TypeScript monorepo: Next.js frontend, NestJS backend,
+  PostgreSQL/Drizzle data access, Better Auth, Zod runtime schemas, and TanStack
+  Query. Read AGENTS.md first, then only the relevant parts of CONTEXT.md,
+  PRODUCT.md, DESIGN.md, and docs/. Reuse shared packages and preserve existing
+  worktree changes.
+  Follow docs/development-workflow.md for execution authority and the delivery
+  loop, and docs/openspec.md for document ownership. PRODUCT.md owns terminology;
+  CONTEXT.md is technical context. Reuse approval already given for the same
+  scope. Do not add duplicate issue specs or task lists.
+
+rules:
+  proposal:
+    - Keep the proposal scoped to confirmed product behavior; record material open decisions instead of inventing them.
+    - State web and API access implications for every route change.
+    - Identify the durable documentation that must be updated when the change lands.
+  tasks:
+    - Include focused validation proportional to the change's risk.
+    - Include requirement coverage review, relevant tests, documentation updates, spec synchronization and validation before archive.
+
+operations:
+  apply:
+    guidance:
+      - Keep implementation focused and follow AGENTS.md validation and security rules.
+      - Update CONTEXT.md, docs/, or package READMEs when the change affects their documented contract.
+  archive:
+    guidance:
+      - Merge change deltas into openspec/specs and validate before archive; do not skip synchronization.
+      - Update other documents for their own contracts under docs/openspec.md; archive is not proof of merge or release.

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -p 3001",
-    "build": "pnpm --filter @shared/routes run build && pnpm --filter @shared/i18n run build && pnpm --filter @shared/components run build && pnpm --filter @shared/auth run build && pnpm --filter @shared/queries run build && next build",
+    "build": "pnpm --filter @shared/routes run build && pnpm --filter @shared/i18n run build && pnpm --filter @shared/components run build && pnpm --filter @shared/auth run build && pnpm --filter @shared/schemas run build && pnpm --filter @shared/queries run build && next build",
     "start": "next start -p 3001"
   },
   "dependencies": {

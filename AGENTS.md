@@ -16,6 +16,23 @@ Read only the context needed for the task.
 - This root `AGENTS.md` is the only agent instruction file. Do not add nested
   `AGENTS.md` files unless the user explicitly asks.
 
+## Project Repository
+
+- Repository URL: https://github.com/owner/repository
+
+## Development Workflow
+
+Follow [`docs/development-workflow.md`](docs/development-workflow.md) for
+product initialization and issue-driven development. Use `$init-project` only
+to establish the product foundation and initial backlog; select one approved
+issue before starting an OpenSpec change.
+
+That workflow owns skill composition, readiness, and execution mode. Reuse
+approval for the same scope; automatic runs do not require repeated human gates
+for routine steps. Merge/deploy authority must be explicit. Matt skills use
+`PRODUCT.md` terminology, not `CONTEXT.md`. Use the configured Git issue workflow
+for tracker schemas, and `docs/openspec.md` for document ownership.
+
 ## Operating Rules
 
 - Follow the user's latest instruction when it conflicts with older context.
@@ -63,5 +80,11 @@ Run the smallest checks that prove the change.
 
 ## Maintenance
 
-Update `CONTEXT.md` when product rules, architecture boundaries, commands,
+Update `CONTEXT.md` when architecture boundaries, commands,
 environment variables, test strategy, or known constraints change.
+Product terminology belongs in `PRODUCT.md`; detailed behavioral requirements
+belong in the relevant current OpenSpec spec when that capability is covered.
+
+When a change affects a documented contract, update its source-of-truth
+documentation in the same change. Do not create feature-spec frameworks or
+temporary planning folders unless the user explicitly requests them.

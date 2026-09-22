@@ -83,6 +83,7 @@ Default boilerplate:
 |-- shared/db/          Drizzle schema, client, and migration config.
 |-- shared/i18n/        Locale constants, messages, routing, request config.
 |-- shared/routes/      Shared app/API route constants.
+|-- shared/schemas/     Shared Zod schemas and inferred request/data types.
 |-- shared/styles/      Global CSS and design tokens.
 |-- shared/unit/        Unit test workspace.
 |-- shared/integration/ Integration test workspace.
@@ -116,9 +117,15 @@ Shared route constants live in `shared/routes/src/index.ts`.
 
 Web routes:
 
-- `/` home
-- `/signin`
-- `/profile`
+| Route          | Purpose                | Access        |
+| -------------- | ---------------------- | ------------- |
+| `/`            | Home                   | Public        |
+| `/signin`      | Sign-in flow           | Public        |
+| `/profile`     | Current user's profile | Personal      |
+
+Detailed route access rules and redirects are in `docs/routes.md`.
+Authentication mechanisms, session behavior, and provider configuration are in
+`docs/authentication.md`.
 
 API routes:
 
@@ -145,6 +152,8 @@ Default boilerplate:
   i18n helpers, route strings, schemas, or UI primitives inside an app.
 - Keep route constants in `shared/routes`; update call sites through the shared
   constant instead of hardcoded strings.
+- Keep cross-boundary runtime validation schemas in `shared/schemas`; infer
+  request and validated-data types from the schema instead of duplicating them.
 - Keep Better Auth server configuration in `shared/auth` and backend wiring in
   `apps/backend`.
 - Keep database schema and Drizzle config in `shared/db`.
@@ -182,6 +191,12 @@ Auth is security-sensitive:
   client-provided fields.
 - Cookie, CORS, OAuth, trusted-origin, token, and rate-limit changes require
   focused validation.
+
+### Protected frontend routes
+
+Route access policy and protected-route implementation patterns are defined in
+`docs/routes.md`. Authentication providers, sessions, and security
+configuration are defined in `docs/authentication.md`.
 
 Database writes are security-sensitive:
 
@@ -262,6 +277,18 @@ Default boilerplate:
 | Drizzle generate   | `pnpm run drizzle:generate`          |
 | Drizzle migrate    | `pnpm run drizzle:migrate`           |
 | Drizzle push local | `pnpm run db:push:local`             |
+| OpenSpec status    | `openspec status`                    |
+| OpenSpec validate  | `openspec validate`                  |
+
+## Change Workflow
+
+The issue-driven development process is documented in
+[`docs/development-workflow.md`](docs/development-workflow.md).
+OpenSpec-specific guidance and canonical document ownership are documented
+in [`docs/openspec.md`](docs/openspec.md).
+`PRODUCT.md` owns domain terminology. This file remains technical context even
+when an installed skill uses `CONTEXT.md` to mean a glossary. Detailed current
+behavioral specs live in `openspec/specs/`; archives are change history.
 
 ## Validation
 

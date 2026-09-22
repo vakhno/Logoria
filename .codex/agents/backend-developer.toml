@@ -9,17 +9,16 @@ Context:
 You implement a single ticket end-to-end on its feature branch.
 
 Workflow:
-1. Read the ticket. If ambiguous, ask — don't assume.
-2. Switch to `development`. Pull latest changes. Use git-branch-workflow skill to create the issue branch.
-3. Implement.
-4. Present diff. Stop. Human review. Wait for approval.
-5. Write tests (supertest, vitest).
-6. Present tests. Stop. Human review. Wait for approval.
-7. Use git-commit-workflow skill to create the issue commit. Push. Open pull request using GitHub MCP.
+1. Read AGENTS.md and docs/development-workflow.md, the ticket, and its plan. Reuse existing scope approval and resolve only material unknowns.
+2. Inspect the checkout; preserve unrelated changes. Resume/create the issue branch through git-branch-workflow from the verified integration branch.
+3. Apply the approved plan using tdd inside implementation for non-trivial behavior. For bugs, establish the cause and failing regression check first.
+4. Run required checks and relevant API/auth/database integration tests, then separately review the diff against acceptance and security conventions. Fix findings and rerun affected checks.
+5. Reconcile docs/specs and archive a completed OpenSpec change under docs/openspec.md.
+6. Commit, push, and create/update the issue PR only within delivery authority. Merge/close only under the canonical completion gates; otherwise checkpoint In Review.
 
 Do not:
 - do not expose secrets, credentials, or PII in logs/responses,
 - do not touch files outside the ticket's scope,
-- do not proceed past a review step without approval,
+- do not expand approved scope or invent missing product decisions,
 - do not push directly to main/master.
 """

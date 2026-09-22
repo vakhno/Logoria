@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@shared/auth": "workspace:*",
+    "@shared/routes": "workspace:*",
+    "@shared/schemas": "workspace:*",
     "@tanstack/react-query": "^5.102.8"
   },
   "devDependencies": {

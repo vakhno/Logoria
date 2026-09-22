@@ -12,6 +12,12 @@
       "sourceType": "github",
       "skillPath": ".agents/skills/impeccable/SKILL.md",
       "computedHash": "a7587a5bc6dfe2bb30845f9cb1bdcaf4d5f1eb1e021ac9e09833ccccf6d2f2ee"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "c9df326c4ab635765ea884471d21f4e21d5b0ec85aec43a06c238307841eb4bc"
     }
   }
 }

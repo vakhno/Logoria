@@ -5,6 +5,12 @@ description: Test-driven development with red-green-refactor loop. Use when user
 
 # Test-Driven Development
 
+Repository integration: follow `docs/development-workflow.md`. TDD runs inside
+the approved implementation loop, not as a later testing phase. Planning approval
+and agreed test boundaries already recorded in the issue/OpenSpec change satisfy
+the approval checklist below. Reopen only changed or unresolved material decisions.
+Read domain terms from `PRODUCT.md`; `CONTEXT.md` remains technical context.
+
 ## Philosophy
 
 **Core principle**: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't.
