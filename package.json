@@ -10,7 +10,7 @@
     "docker:logs:local": "docker-compose --profile http -f docker-compose.local.yaml --env-file .env.local logs -f",
     "docker:start:local": "pnpm run docker:build:local && pnpm run docker:up:local && pnpm run docker:logs:local",
     "docker:build:local:https": "docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local build",
-    "docker:up:local:https": "cross-env API_PUBLIC_URL=https://localhost:3002 APP_PUBLIC_URL=https://localhost:3001 docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local rm -f db-push && cross-env API_PUBLIC_URL=https://localhost:3002 APP_PUBLIC_URL=https://localhost:3001 docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local up -d",
+    "docker:up:local:https": "cross-env API_PUBLIC_URL=https://localhost:3002 APP_PUBLIC_URL=https://localhost:3001 docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local rm -f db-push && cross-env API_PUBLIC_URL=https://localhost:3002 APP_PUBLIC_URL=https://localhost:3001 VITE_APP_PUBLIC_URL=https://localhost:3003 docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local up -d",
     "docker:trust-caddy": "docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local cp caddy-https:/data/caddy/pki/authorities/local/root.crt .\\caddy-local-root.crt && certutil -user -addstore Root .\\caddy-local-root.crt",
     "docker:logs:local:https": "docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local logs -f",
     "docker:start:local:https": "pnpm run docker:build:local:https && pnpm run docker:up:local:https && pnpm run docker:trust-caddy && pnpm run docker:logs:local:https",

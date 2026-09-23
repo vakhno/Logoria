@@ -1,0 +1,9 @@
+:3003 {
+	handle /api/* {
+		reverse_proxy backend:{$API_PORT}
+	}
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+}

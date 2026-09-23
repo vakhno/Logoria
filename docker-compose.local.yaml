@@ -8,8 +8,12 @@ services:
       - -c
       - |
         cat >/etc/caddy/Caddyfile <<EOF
-        http://localhost:$${APP_PORT} {
-        	reverse_proxy frontend:$${APP_PORT}
+        http://localhost:$${APP_PORT_NEXT} {
+          reverse_proxy frontend-next:$${APP_PORT_NEXT}
+        }
+
+        http://localhost:$${APP_PORT_VITE} {
+          reverse_proxy frontend-vite:$${APP_PORT_VITE}
         }
 
         http://localhost:$${API_PORT} {
@@ -18,13 +22,15 @@ services:
         EOF
         caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
     environment:
-      APP_PORT: ${APP_PORT}
+      APP_PORT_NEXT: ${APP_PORT_NEXT}
+      APP_PORT_VITE: ${APP_PORT_VITE}
       API_PORT: ${API_PORT}
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${APP_PORT_NEXT}:${APP_PORT_NEXT}"
+      - "${APP_PORT_VITE}:${APP_PORT_VITE}"
       - "${API_PORT}:${API_PORT}"
     depends_on:
-      frontend:
+      frontend-next:
         condition: service_started
       backend:
         condition: service_started
@@ -38,9 +44,14 @@ services:
       - -c
       - |
         cat >/etc/caddy/Caddyfile <<EOF
-        localhost:$${APP_PORT} {
+        localhost:$${APP_PORT_NEXT} {
         	tls internal
-        	reverse_proxy frontend:$${APP_PORT}
+          reverse_proxy frontend-next:$${APP_PORT_NEXT}
+        }
+
+        localhost:$${APP_PORT_VITE} {
+          tls internal
+          reverse_proxy frontend-vite:$${APP_PORT_VITE}
         }
 
         localhost:$${API_PORT} {
@@ -50,16 +61,18 @@ services:
         EOF
         caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
     environment:
-      APP_PORT: ${APP_PORT}
+      APP_PORT_NEXT: ${APP_PORT_NEXT}
+      APP_PORT_VITE: ${APP_PORT_VITE}
       API_PORT: ${API_PORT}
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${APP_PORT_NEXT}:${APP_PORT_NEXT}"
+      - "${APP_PORT_VITE}:${APP_PORT_VITE}"
       - "${API_PORT}:${API_PORT}"
     volumes:
       - caddy-data:/data
       - caddy-config:/config
     depends_on:
-      frontend:
+      frontend-next:
         condition: service_started
       backend:
         condition: service_started
@@ -95,9 +108,10 @@ services:
       NODE_ENV: development
       ENV_FILE: ${ENV_FILE}
       API_PORT: ${API_PORT}
-      APP_PORT: ${APP_PORT}
+      APP_PORT_NEXT: ${APP_PORT_NEXT}
       API_PUBLIC_URL: ${API_PUBLIC_URL}
       APP_PUBLIC_URL: ${APP_PUBLIC_URL}
+      VITE_APP_PUBLIC_URL: ${VITE_APP_PUBLIC_URL:-http://localhost:3003}
       DATABASE_URL: ${DOCKER_DATABASE_URL}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       GOOGLE_AUTH_CLIENT_ID: ${GOOGLE_AUTH_CLIENT_ID}
@@ -132,13 +146,13 @@ services:
       postgres:
         condition: service_healthy
 
-  frontend:
+  frontend-next:
     build:
       context: ${FRONTEND_BUILD_CONTEXT}
       dockerfile: ${FRONTEND_DOCKERFILE}
       args:
         NODE_IMAGE: ${NODE_IMAGE}
-        FRONTEND_EXPOSE_PORT: ${APP_PORT}
+        FRONTEND_EXPOSE_PORT: ${APP_PORT_NEXT}
     command: ${FRONTEND_DEV_COMMAND}
     env_file:
       - ${ENV_FILE}
@@ -149,13 +163,36 @@ services:
       API_PUBLIC_URL: ${API_PUBLIC_URL}
       APP_PUBLIC_URL: ${APP_PUBLIC_URL}
     volumes:
-      - ./apps/frontend:/app/apps/frontend
+      - ./apps/frontend-next:/app/apps/frontend-next
       - ./shared:/app/shared
       - /app/node_modules
-      - /app/apps/frontend/node_modules
+      - /app/apps/frontend-next/node_modules
       - /app/shared/auth/node_modules
       - /app/shared/queries/node_modules
-      - /app/apps/frontend/.next
+      - /app/apps/frontend-next/.next
+    depends_on:
+      backend:
+        condition: service_started
+
+  frontend-vite:
+    build:
+      context: .
+      dockerfile: apps/frontend-vite/Dockerfile
+      target: dev
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+    command: pnpm --filter frontend-vite run dev
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      NODE_ENV: development
+      VITE_API_PROXY_TARGET: http://backend:${API_PORT}
+    volumes:
+      - ./apps/frontend-vite:/app/apps/frontend-vite
+      - ./shared:/app/shared
+      - /app/node_modules
+      - /app/apps/frontend-vite/node_modules
+      - /app/shared/auth/node_modules
     depends_on:
       backend:
         condition: service_started

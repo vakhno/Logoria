@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "es2022"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@shared/components": ["../../shared/components/src/index.ts"],
+      "@shared/i18n": ["../../shared/i18n/src/index.ts"],
+      "@shared/i18n/*": ["../../shared/i18n/src/*"],
+      "@shared/routes": ["../../shared/routes/src/index.ts"],
+      "@shared/theme": ["../../shared/theme/src/index.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}

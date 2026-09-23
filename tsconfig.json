@@ -23,7 +23,10 @@
       "path": "./apps/backend"
     },
     {
-      "path": "./apps/frontend"
+      "path": "./apps/frontend-next"
+    },
+    {
+      "path": "./apps/frontend-vite"
     },
     {
       "path": "./shared/db"

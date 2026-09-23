@@ -1,0 +1,40 @@
+@import "@shared/styles/globals.css";
+@source "./**/*.{ts,tsx}";
+@source "../../../shared/components/src/**/*.{ts,tsx}";
+
+@font-face {
+  font-family: Montserrat;
+  src: url("/fonts/montserrat-v31-cyrillic_cyrillic-ext_latin_latin-ext-regular.woff2")
+    format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("/fonts/montserrat-v31-cyrillic_cyrillic-ext_latin_latin-ext-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("/fonts/montserrat-v31-cyrillic_cyrillic-ext_latin_latin-ext-500.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("/fonts/montserrat-v31-cyrillic_cyrillic-ext_latin_latin-ext-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  --font-montserrat: Montserrat;
+}

@@ -32,7 +32,10 @@ Authenticated debate routes use defense in depth:
 | --- | --- | --- | --- |
 | `/api/auth/*` | Varies | Public | Authentication provider endpoints. |
 
-The frontend proxies `/api/*` requests to the backend. API handlers must always
+Both frontends proxy `/api/*` requests to the backend. The Vite SPA checks
+`/profile` after loading the session and redirects signed-out visitors to the
+locale's `/signin` route with `redirectTo`; this client route guard is not a
+server-side access boundary. API handlers must always
 validate authentication and authorization themselves; a frontend route guard is
 not an API security boundary.
 

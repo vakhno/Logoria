@@ -39,11 +39,11 @@ function AccountMenu() {
 
 ## Exports
 
-| Export                                 | Purpose                                                                                            |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `sessionQueryKey`                      | The canonical TanStack Query key for the current session.                                          |
-| `useGetSession`                        | Reads the current session. The query becomes stale after 10 minutes and refetches on window focus. |
-| `useSignOut`                           | Signs out the current user and clears the cached session on success.                               |
+| Export            | Purpose                                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| `sessionQueryKey` | The canonical TanStack Query key for the current session.                                          |
+| `useGetSession`   | Reads the current session. The query becomes stale after 10 minutes and refetches on window focus. |
+| `useSignOut`      | Signs out the current user and clears the cached session on success.                               |
 
 ## Rules
 

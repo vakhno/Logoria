@@ -15,13 +15,13 @@ services:
     ports:
       - "${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}"
 
-  frontend:
+  frontend-next:
     build:
       context: ${FRONTEND_BUILD_CONTEXT}
       dockerfile: ${FRONTEND_DOCKERFILE}
       args:
         NODE_IMAGE: ${NODE_IMAGE}
-        FRONTEND_EXPOSE_PORT: ${FRONTEND_EXPOSE_PORT}
+        FRONTEND_EXPOSE_PORT: ${APP_PORT_NEXT}
     restart: unless-stopped
     env_file:
       - ${ENV_FILE}
@@ -29,6 +29,21 @@ services:
       ENV_FILE: ${ENV_FILE}
       NODE_ENV: production
     ports:
-      - "${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}"
+      - "${APP_PORT_NEXT}:${APP_PORT_NEXT}"
+    depends_on:
+      - backend
+
+  frontend-vite:
+    build:
+      context: .
+      dockerfile: apps/frontend-vite/Dockerfile
+      args:
+        NODE_IMAGE: ${NODE_IMAGE}
+        VITE_API_PUBLIC_URL: ${VITE_API_PUBLIC_URL}
+    restart: unless-stopped
+    environment:
+      API_PORT: ${BACKEND_CONTAINER_PORT}
+    ports:
+      - "${APP_PORT_VITE}:3003"
     depends_on:
       - backend

@@ -27,7 +27,7 @@ Describe the confirmed technology stack.
 
 Default boilerplate:
 
-- Frontend: Next.js 16, React 19, next-intl.
+- Frontends: Next.js 16 and an optional React 19/Vite 8 SPA, both using next-intl messages.
 - Backend: NestJS 12 on Express.
 - Data: PostgreSQL through Drizzle ORM.
 - Auth: Better Auth client and server integration.
@@ -50,7 +50,7 @@ container-only volumes to preserve these links.
 Local Docker containers retain anonymous dependency and Next.js cache volumes
 across rebuilds. After changing the package manager or installed dependencies,
 rebuild the app images and recreate the frontend/backend with
-`docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local up -d --no-deps --force-recreate --renew-anon-volumes backend frontend storybook-dev`
+`docker-compose --profile https -f docker-compose.local.yaml --env-file .env.local up -d --no-deps --force-recreate --renew-anon-volumes backend frontend-next storybook-dev`
 (use the active profile). Update local environment startup commands to match their
 pnpm example files. Keep PostgreSQL's named volume; do not use `down -v` for this
 dependency refresh.
@@ -75,7 +75,8 @@ Default boilerplate:
 
 ```text
 /
-|-- apps/frontend/      Next.js app, route screens, providers, local assets.
+|-- apps/frontend-next/ Next.js app, route screens, providers, local assets.
+|-- apps/frontend-vite/ React/Vite SPA clone, client routes, and static Docker image.
 |-- apps/backend/       NestJS API process and Better Auth HTTP handler.
 |-- apps/storybook/     Component stories and visual development surface.
 |-- shared/auth/        Better Auth config, server/client exports, auth types.
@@ -117,11 +118,11 @@ Shared route constants live in `shared/routes/src/index.ts`.
 
 Web routes:
 
-| Route          | Purpose                | Access        |
-| -------------- | ---------------------- | ------------- |
-| `/`            | Home                   | Public        |
-| `/signin`      | Sign-in flow           | Public        |
-| `/profile`     | Current user's profile | Personal      |
+| Route      | Purpose                | Access   |
+| ---------- | ---------------------- | -------- |
+| `/`        | Home                   | Public   |
+| `/signin`  | Sign-in flow           | Public   |
+| `/profile` | Current user's profile | Personal |
 
 Detailed route access rules and redirects are in `docs/routes.md`.
 Authentication mechanisms, session behavior, and provider configuration are in
@@ -130,8 +131,13 @@ Authentication mechanisms, session behavior, and provider configuration are in
 API routes:
 
 - `/api/auth/*` is handled by Better Auth on the backend.
-- The frontend rewrites `/api/auth/:path*` to the API server using
+- The Next.js frontend rewrites `/api/auth/:path*` to the API server using
   `INTERNAL_API_URL`, `API_PUBLIC_URL`, or `http://localhost:3002`.
+- The Vite frontend proxies `/api/*` to the API server in dev/preview and through
+  Caddy in its production image.
+- The Vite app is a client-rendered SPA. Its localized title and profile guard
+  run in the browser; Next.js retains server-rendered SEO metadata and its
+  server-side profile check.
 
 Expected content:
 
@@ -158,7 +164,7 @@ Default boilerplate:
   `apps/backend`.
 - Keep database schema and Drizzle config in `shared/db`.
 - Keep reusable UI in `shared/components`; keep route-level screen composition
-  in `apps/frontend/src/screens`.
+  in each frontend's `src/screens`.
 - Use `DESIGN.md` and `shared/styles/src/globals.css` for product UI tokens.
   Avoid one-off colors, spacing, radii, or motion values in components.
 - Do not edit generated files such as `.next/`, `dist/`, `node_modules/`,
@@ -235,11 +241,20 @@ Use committed examples as the source of truth for variable names:
 
 Known runtime values:
 
-- Frontend dev port: `3001`.
+- Next frontend dev/container port: `APP_PORT_NEXT=3001`.
+- Vite frontend dev/container port: `APP_PORT_VITE=3003`.
+- `apps/frontend-vite/.env.example` documents `VITE_API_PROXY_TARGET` for direct
+  Vite dev/preview. Docker sets it to the backend service URL. Stage/production
+  set `VITE_API_PUBLIC_URL` at image build time so auth requests reach the API
+  cookie origin; production falls back to `NEXT_PUBLIC_API_URL` when unset.
+  Changing this URL requires an image rebuild.
 - Backend local API port: `3002` via `API_PORT` or `dev:3002`.
 - `API_PUBLIC_URL`, `APP_PUBLIC_URL`, and `INTERNAL_API_URL` control public and
   internal app/API URLs.
 - Backend loads `ENV_FILE`, defaulting to `.env.local`.
+- `VITE_APP_PUBLIC_URL` adds the Vite origin to Better Auth trusted origins.
+- Docker Compose starts Next and Vite together in local, stage, and production.
+  Stage and production map the Vite static image through `APP_PORT_VITE`.
 
 Never commit real secrets from `.env.local`, `.env.stage`, or `.env.production`.
 
@@ -258,27 +273,29 @@ List the standard commands contributors and agents should run from the repositor
 
 Default boilerplate:
 
-| Task               | Command                              |
-| ------------------ | ------------------------------------ |
-| Install            | `pnpm install`                       |
-| Frontend dev       | `pnpm --filter frontend run dev`     |
-| Backend dev        | `pnpm --filter backend run dev:3002` |
-| Storybook          | `pnpm run storybook`                 |
-| Build              | `pnpm run build`                     |
-| Lint               | `pnpm run lint`                      |
-| Typecheck          | `pnpm run typecheck`                 |
-| Format             | `pnpm run format`                    |
-| Format check       | `pnpm run format:check`              |
-| Unit tests         | `pnpm run test:unit`                 |
-| Integration tests  | `pnpm run test:integration`          |
-| E2E tests          | `pnpm run test:e2e`                  |
-| Local Docker start | `pnpm run docker:start:local`        |
-| Local Docker stop  | `pnpm run docker:down:local`         |
-| Drizzle generate   | `pnpm run drizzle:generate`          |
-| Drizzle migrate    | `pnpm run drizzle:migrate`           |
-| Drizzle push local | `pnpm run db:push:local`             |
-| OpenSpec status    | `openspec status`                    |
-| OpenSpec validate  | `openspec validate`                  |
+| Task                | Command                                 |
+| ------------------- | --------------------------------------- |
+| Install             | `pnpm install`                          |
+| Next frontend dev   | `pnpm --filter frontend-next run dev`   |
+| Vite frontend dev   | `pnpm --filter frontend-vite run dev`   |
+| Vite frontend build | `pnpm --filter frontend-vite run build` |
+| Backend dev         | `pnpm --filter backend run dev:3002`    |
+| Storybook           | `pnpm run storybook`                    |
+| Build               | `pnpm run build`                        |
+| Lint                | `pnpm run lint`                         |
+| Typecheck           | `pnpm run typecheck`                    |
+| Format              | `pnpm run format`                       |
+| Format check        | `pnpm run format:check`                 |
+| Unit tests          | `pnpm run test:unit`                    |
+| Integration tests   | `pnpm run test:integration`             |
+| E2E tests           | `pnpm run test:e2e`                     |
+| Local Docker start  | `pnpm run docker:start:local`           |
+| Local Docker stop   | `pnpm run docker:down:local`            |
+| Drizzle generate    | `pnpm run drizzle:generate`             |
+| Drizzle migrate     | `pnpm run drizzle:migrate`              |
+| Drizzle push local  | `pnpm run db:push:local`                |
+| OpenSpec status     | `openspec status`                       |
+| OpenSpec validate   | `openspec validate`                     |
 
 ## Change Workflow
 

@@ -99,7 +99,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  apps/frontend:
+  apps/frontend-next:
     dependencies:
       '@shared/auth':
         specifier: workspace:*
@@ -150,6 +150,52 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+
+  apps/frontend-vite:
+    dependencies:
+      '@shared/auth':
+        specifier: workspace:*
+        version: link:../../shared/auth
+      '@shared/components':
+        specifier: workspace:*
+        version: link:../../shared/components
+      '@shared/i18n':
+        specifier: workspace:*
+        version: link:../../shared/i18n
+      '@shared/routes':
+        specifier: workspace:*
+        version: link:../../shared/routes
+      '@shared/styles':
+        specifier: workspace:*
+        version: link:../../shared/styles
+      '@shared/theme':
+        specifier: workspace:*
+        version: link:../../shared/theme
+      next-intl:
+        specifier: ^4.14.2
+        version: 4.14.4(@swc/helpers@0.5.23)(next@16.3.4(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.63.0)(@types/node@26.5.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.4.1
+        version: 26.5.1
+      '@types/react':
+        specifier: ^19.2.18
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.2.7
+        version: 19.3.0(@types/react@19.3.0)
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 8.3.0
+        version: 8.3.0(@types/node@26.5.1)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.13)
 
   apps/storybook:
     devDependencies:
